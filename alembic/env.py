@@ -8,6 +8,7 @@ from alembic import context
 from app.core.config import settings
 from app.core.database import Base
 from app.users.models import User
+from app.products.models import Category, Product   
 
 config = context.config
 

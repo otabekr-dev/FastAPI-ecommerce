@@ -1,12 +1,12 @@
-from fastapi import HTTPException,  status
-from sqlalchemy.orm import Session
+from fastapi import HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.users import repository
 from app.users.schemas import UserCreate
 from app.users.models import User
 from app.core.security import hash_password, verify_password
 
-async def authenticate_user(db:Session, username:str, password:str) -> User:
+async def authenticate_user(db:AsyncSession, username:str, password:str) -> User:
     user = await repository.get_by_username(db, username)
 
     if not user or not verify_password(password, user.hashed_password):
@@ -17,7 +17,7 @@ async def authenticate_user(db:Session, username:str, password:str) -> User:
 
     return user
 
-async def register_user(db: Session, user_data:UserCreate) -> User:
+async def register_user(db: AsyncSession, user_data:UserCreate) -> User:
     existing_user = await repository.get_by_username(db, user_data.username)
 
     if existing_user:

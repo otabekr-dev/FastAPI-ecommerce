@@ -2,10 +2,10 @@ from fastapi import Depends, APIRouter, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.users.dependencies import require_admin, get_current_user
+from app.users.dependencies import require_admin
 from app.products import service
 from app.products.schemas import CategoryCreate, CategoryOut, ProductUpdate, ProductCreate, ProductOut
-from app.products.models import Category, Product
+from app.products.models import Category
 
 router_product = APIRouter(prefix='/products', tags=['products'])
 router_category = APIRouter(prefix='/category', tags=['category'])

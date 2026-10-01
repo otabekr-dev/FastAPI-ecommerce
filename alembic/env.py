@@ -9,6 +9,7 @@ from app.core.config import settings
 from app.core.database import Base
 from app.users.models import User
 from app.products.models import Category, Product   
+from app.cart.models import Cart, CartItems
 
 config = context.config
 

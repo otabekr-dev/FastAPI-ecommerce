@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.cart.models import CartItems, Cart
 
-async def get_cart_by_user_id(db:AsyncSession, user_id:int) -> Cart:
+async def get_cart_by_user_id(db:AsyncSession, user_id:int) -> Cart | None:
     result = await db.execute(select(Cart).where(Cart.user_id==user_id))
     return result.scalar_one_or_none()
 
@@ -14,6 +14,8 @@ async def create_cart(db:AsyncSession, user_id:int) -> Cart:
     db.add(cart)
     await db.commit()
     await db.refresh(cart)
+
+    return cart
 
 async def get_item_by_product(db:AsyncSession, cart_id:int, product_id:int) -> CartItems | None:
     result = await db.execute(select(CartItems).where(CartItems.product_id==product_id, CartItems.cart_id==cart_id))
@@ -34,12 +36,16 @@ async def add_item(db:AsyncSession, cart_id:int, product_id:int, quantity:int) -
     await db.commit()
     await db.refresh(cart_item)
 
+    return cart_item
+
 async def update_item_quantity(db:AsyncSession, item:CartItems, quantity:int) -> CartItems:
     item.quantity = quantity
 
     await db.commit()
     await db.refresh(item)
 
-async def delete_item(db:AsyncSession, item:CartItems)-> CartItems:
+    return item
+
+async def delete_item(db:AsyncSession, item:CartItems):
     await db.delete(item)
     await db.commit()

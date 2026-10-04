@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.cart.models import CartItems, Cart
 
@@ -49,3 +49,7 @@ async def update_item_quantity(db:AsyncSession, item:CartItems, quantity:int) ->
 async def delete_item(db:AsyncSession, item:CartItems):
     await db.delete(item)
     await db.commit()
+
+async def clear_cart(db:AsyncSession, cart_id:int) -> None:
+    await db.execute(delete(CartItems).where(CartItems.cart_id==cart_id))
+    

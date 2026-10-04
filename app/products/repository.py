@@ -64,3 +64,14 @@ async def update_product(db: AsyncSession, product: Product, update_data: dict) 
     await db.refresh(product)
 
     return product
+
+async def get_products_for_update(db: AsyncSession, product_ids:list[int])-> list[Product]:
+    result = await db.execute(
+        select(Product)
+        .where(Product.id.in_(product_ids))
+        .order_by(Product.id)
+        .with_for_update()
+        .execution_options(populate_existing=True)
+    )
+
+    return list(result.scalars().all())

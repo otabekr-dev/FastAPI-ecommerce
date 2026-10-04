@@ -10,6 +10,7 @@ from app.core.database import Base
 from app.users.models import User
 from app.products.models import Category, Product   
 from app.cart.models import Cart, CartItems
+from app.orders.models import Order, OrderItem
 
 config = context.config
 

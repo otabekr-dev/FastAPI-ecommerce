@@ -1,0 +1,19 @@
+name: FastAPI-Ecommerce
+services:
+  web:
+    build: .
+    ports:
+      -'8000:8000'
+    volumes:
+      - .:/app
+    command: uvicorn app.main:app
+
+  db:
+    image: postgres:16
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data

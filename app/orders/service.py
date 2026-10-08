@@ -103,4 +103,15 @@ async def change_status(db: AsyncSession, order_id: int, new_status: Status) -> 
             detail=f'Cannot change status from {order.status.value} to {new_status.value}'
         )
 
+    if new_status == Status.CANCELLED and order.status != Status.CANCELLED:
+        product_ids = []
+
+        for item in order.items:
+            product_ids.append(item.product_id)
+
+        await product_repository.get_products_for_update(db, product_ids=product_ids)
+
+        for item in order.items:
+            item.product.stock += item.quantity
+
     return await repository.update_status(db, order=order, new_status=new_status)
